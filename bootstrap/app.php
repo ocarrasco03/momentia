@@ -15,5 +15,17 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (AuthenticationException $e, $request) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+                'error'   => $e->getMessage()
+            ], 401);
+        });
+
+        $exceptions->render(function (AuthorizationException | AccessDeniedHttpException $e, $request) {
+            return response()->json([
+                'message' => 'You cannot perform this actions.',
+                'error'   => $e->getMessage()
+            ], 403);
+        });
     })->create();
