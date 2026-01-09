@@ -1,0 +1,7 @@
+<?php
+
+use function PHPUnit\Framework\interface_exists;
+
+it('contract exists', function () {
+    expect(interface_exists({{ fullClass }}::class))->toBeTrue();
+});

@@ -1,0 +1,11 @@
+<?php
+
+namespace {{ namespace }};
+
+interface {{ class }}
+{
+    /**
+     * Example interface method
+     */
+    public function example(): void;
+}

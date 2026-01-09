@@ -1,0 +1,7 @@
+<?php
+
+use {{ fullClass }};
+
+it('can instantiate {{ fullClass }}', function () {
+    expect(new {{ fullClass }}())->toBeInstanceOf({{ fullClass }}::class);
+});
