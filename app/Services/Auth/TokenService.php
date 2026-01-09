@@ -4,6 +4,7 @@ namespace App\Services\Auth;
 
 use App\Contracts\Auth\TokenService as TokenServiceContract;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class TokenService implements TokenServiceContract
@@ -40,8 +41,14 @@ class TokenService implements TokenServiceContract
         $user->tokens()->delete();
     }
 
-    public function verifyToken(string $token): bool
+    public function verifyToken(Request $token): bool
     {
-        // TODO: Implement verifyToken() method.
+        $tkn = $token->user()->currentAccessToken();
+
+        if ($tkn && $tkn->expires_at && $tkn->expires_at->isPast()) {
+            return true;
+        }
+
+        return false;
     }
 }

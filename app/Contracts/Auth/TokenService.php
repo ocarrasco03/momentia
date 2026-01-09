@@ -3,6 +3,7 @@
 namespace App\Contracts\Auth;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 
 interface TokenService
 {
@@ -29,5 +30,5 @@ interface TokenService
      * @param string $token
      * @return bool
      */
-    public function verifyToken(string $token): bool;
+    public function verifyToken(Request $token): bool;
 }
