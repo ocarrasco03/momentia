@@ -3,6 +3,7 @@
 namespace App\Services\Auth;
 
 use \App\Contracts\Auth\AuthService as AuthServiceContract;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -16,8 +17,10 @@ class AuthService implements AuthServiceContract
 
     public function __construct(protected TokenService $tokenService) {}
 
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
+        $request->validated();
+
         $credentials = $request->only('email', 'password');
 
         $user = User::where('email', $credentials['email'])->first();
