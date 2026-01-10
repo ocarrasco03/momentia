@@ -43,26 +43,38 @@ class AuthService implements AuthServiceContract
 
     public function logout(Request $request): JsonResponse
     {
-        if (!$request->user()) {
-            return response()->json([]);
-        }
-
         $this->tokenService->revokeToken($request->user());
         return $this->success(null, 'You have been logged out.');
     }
 
     public function refresh(Request $request): JsonResponse
     {
-        // TODO: Implement refresh() method.
+        $this->tokenService->revokeToken($request->user());
+
+        return $this->success(
+            $this->tokenService->generateToken($request->user()),
+            'Token successfully refreshed.'
+        );
     }
 
     public function register(Request $request): JsonResponse
     {
-        // TODO: Implement register() method.
+        $user = User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+        ]);
+
+        return $this->success(
+            $this->tokenService->generateToken($user),
+            'User registered successfully.'
+        );
     }
 
     public function me(Request $request): JsonResponse
     {
-        // TODO: Implement me() method.
+        $user = $request->user();
+
+        return $this->success($user);
     }
 }
