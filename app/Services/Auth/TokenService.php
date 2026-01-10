@@ -11,7 +11,9 @@ class TokenService implements TokenServiceContract
 {
     public function generateToken(User $user): array
     {
-        $token      = $user->createToken(config('app.name'));
+        $token      = $user->createToken(
+            config('app.name')
+        );
         $plainToken = $token->plainTextToken;
         $model      = $token->accessToken;
 
@@ -33,7 +35,9 @@ class TokenService implements TokenServiceContract
         /** @var PersonalAccessToken|null $token */
         $token = $user->currentAccessToken();
 
-        $token?->delete();
+        if ($token instanceof PersonalAccessToken) {
+            $token->delete();
+        }
     }
 
     public function revokeAllTokens(User $user): void
@@ -41,14 +45,19 @@ class TokenService implements TokenServiceContract
         $user->tokens()->delete();
     }
 
-    public function verifyToken(Request $token): bool
+    public function verifyToken(Request $request): bool
     {
-        $tkn = $token->user()->currentAccessToken();
-
-        if ($tkn && $tkn->expires_at && $tkn->expires_at->isPast()) {
-            return true;
+        $user = $request->user();
+        if (!$user) {
+            return false;
         }
 
-        return false;
+        $token = $user->currentAccessToken();
+
+        if (!$token || !$token->expires_at) {
+            return false;
+        }
+
+        return $token->expires_at->isPast();
     }
 }

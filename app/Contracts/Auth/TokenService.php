@@ -27,8 +27,8 @@ interface TokenService
     public function revokeAllTokens(User $user): void;
 
     /**
-     * @param string $token
+     * @param Request $request
      * @return bool
      */
-    public function verifyToken(Request $token): bool;
+    public function verifyToken(Request $request): bool;
 }
