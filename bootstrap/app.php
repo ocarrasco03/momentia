@@ -7,6 +7,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\HandleCors;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->append(HandleCors::class);
         $middleware->alias([
             'check.token.expiration' => CheckTokenExpiration::class,
             'force.json'             => ForceJsonResponse::class,
@@ -26,6 +28,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->group('api', [
             'force.json',
             'check.token.expiration',
+//            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            'throttle:api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

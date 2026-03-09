@@ -25,11 +25,11 @@ Route::group(['prefix' => 'v1'], function () {
         });
 
         Route::group(['prefix' => 'events'], function () {
-            // Route::get('/');
-            // Route::post('/');
-            // Route::get('{id}');
-            // Route::put('{id}');
-            // Route::delete('{id}');
+             Route::get('/', []);
+             Route::post('/', []);
+             Route::get('{slug}', []);
+             Route::put('{slug}', []);
+             Route::delete('{slug}', []);
 
             Route::group(['prefix' => '{id}'], function () {
                 // Route::get('guests');
